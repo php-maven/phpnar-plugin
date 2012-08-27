@@ -28,7 +28,6 @@ import org.apache.maven.plugin.nar.NarProperties;
 import org.apache.maven.plugin.nar.NarUtil;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
-import org.apache.velocity.texen.util.PropertiesUtil;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
 import org.codehaus.plexus.util.PropertyUtils;
 import org.phpmaven.core.ExecutionUtils;
