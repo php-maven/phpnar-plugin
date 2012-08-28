@@ -15,7 +15,7 @@
     <groupId>org.phpmaven</groupId>
     <artifactId>phpnar-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     
     <name>phpnar-plugin ${project.version}</name>
 
