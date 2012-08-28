@@ -24,6 +24,11 @@
     <url>${phpmavenRootUrl}/${project.artifactId}/${phpmavenTagName}/</url>
     
     <distributionManagement>
+    	<repository>
+    		<id>nexus-xworlds</id>
+    		<name>Nexus xWorlds</name>
+    		<url>http://nexus.php-maven.org/content/repositories/php-maven-plugin-releases/</url>
+    	</repository>
         <site>
             <id>upload-${phpmavenSitesId}</id>
             <name>${phpmavenSitesName}</name>
