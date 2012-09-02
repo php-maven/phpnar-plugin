@@ -161,8 +161,7 @@ public class CompileMojo extends AbstractNarMojo {
         try {
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"");
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"");
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/config-stubs").getAbsolutePath() + "\"");
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/buildcheck.sh").getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/*").getAbsolutePath() + "\"");
             buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"", targetFolder).trim();
             ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\" --force", targetFolder);
         }
