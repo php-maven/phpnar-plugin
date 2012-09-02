@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugin.nar.NarProperties;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -155,19 +156,31 @@ public class CompileMojo extends AbstractNarMojo {
         
         final File installFolder = new File(targetFolder, "phpmaven.install");
 
-        String hostOs = null;
+        String buildOs = null;
 
         try {
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"");
-            hostOs = ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + buildScript.getAbsolutePath() + "\"").trim();
+            buildOs = ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + buildScript.getAbsolutePath() + "\"").trim();
         }
         catch (CommandLineException ex) {
             throw new MojoFailureException("Failed to find the host os (config.guess)", ex);
         }
         
+        final String propertyKey = item.getAol().getKey();
+        final NarProperties props = NarProperties.getInstance(this.project);
+        final String hostOs = props.getProperty(propertyKey + ".ArchFlags");
+        final String archFlags = props.getProperty(propertyKey + ".HostOs");
+        
         final StringBuffer content = new StringBuffer();
         // TODO Autodetect cross compilation
-        content.append("configure --prefix=\"" + installFolder.getAbsolutePath() + "\" " + this.createConfigureArgs(item, "--enable-cli --enable-embed=STATIC") + "\n");
+        content.append("configure " +
+        		"--prefix=\"" + installFolder.getAbsolutePath() + "\" " +
+        		"--build=" + buildOs + " " +
+        		"--host=" + hostOs + " " +
+        		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options") + "' " +
+        		"CXXFLAGS='" + archFlags + "' " + props.getProperty(propertyKey + ".cpp.options") + "" +
+        		"LDFLAGS='" + archFlags + "' " +
+        		this.createConfigureArgs(item, "--enable-cli --enable-embed=SHARED") + "\n");
         content.append("make\n");
         content.append("make install\n");
         
@@ -200,24 +213,13 @@ public class CompileMojo extends AbstractNarMojo {
         
         final String effectiveArch = item.getArch().equals("amd64") ? "x64" : item.getArch();
         
-        if (item.getArch().equals("ia64")) {
-            // due to a bug in compiler detection ia64 failes.
-            // configure will think this is a 32bit build. 
-            content.append("call setenv /x64 /win7 /release\n");
-            content.append("cd \"" + targetFolder.getAbsolutePath() + "\"\n");
-            content.append("call bin\\phpsdk_setvars.bat\n");
-            content.append("cd \"" + buildTargetDir.getAbsolutePath() + "\"\n");
-            content.append("call buildconf\n");
-            content.append("call configure " + this.createConfigureArgs(item, "--enable-cli") + "\n");
-            content.append("call setenv /ia64 /win7 /release\n");
-        } else {
-            content.append("call setenv /" + effectiveArch + " /win7 /release\n");
-            content.append("cd \"" + targetFolder.getAbsolutePath() + "\"\n");
-            content.append("call bin\\phpsdk_setvars.bat\n");
-            content.append("cd \"" + buildTargetDir.getAbsolutePath() + "\"\n");
-            content.append("call buildconf\n");
-            content.append("call configure " + this.createConfigureArgs(item, "--enable-cli") + "\n");
-        }
+        content.append("call setenv /" + effectiveArch + " /win7 /release\n");
+        content.append("cd \"" + targetFolder.getAbsolutePath() + "\"\n");
+        content.append("call bin\\phpsdk_setvars.bat\n");
+        content.append("cd \"" + buildTargetDir.getAbsolutePath() + "\"\n");
+        content.append("call buildconf\n");
+        content.append("perl -p -i.bak -e 's/PHP_OBJECT_OUT_DIR = \\'x64..\\'/PHP_OBJECT_OUT_DIR = \\'\\'/' configure.js\n");
+        content.append("call configure " + this.createConfigureArgs(item, "--enable-cli") + "\n");
         
         // fix makefile for 64 builds. nmake snap wont work because of subdirectory in BUILD_DIR
         // see https://bugs.php.net/bug.php?id=62945
