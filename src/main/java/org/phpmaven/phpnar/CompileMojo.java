@@ -163,8 +163,8 @@ public class CompileMojo extends AbstractNarMojo {
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"");
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/config-stubs").getAbsolutePath() + "\"");
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/buildcheck.sh").getAbsolutePath() + "\"");
-            buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"").trim();
-            ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"").trim();
+            buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"", targetFolder).trim();
+            ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\" --force", targetFolder);
         }
         catch (CommandLineException ex) {
             throw new MojoFailureException("Failed to find the host os (config.guess)", ex);
