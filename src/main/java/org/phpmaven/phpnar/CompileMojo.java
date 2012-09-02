@@ -162,6 +162,12 @@ public class CompileMojo extends AbstractNarMojo {
         final NarProperties props = NarProperties.getInstance(this.project);
         final String hostOs = props.getProperty(propertyKey + ".HostOs");
         final String archFlags = props.getProperty(propertyKey + ".ArchFlags");
+        String extraLdFlags = "";
+        if (archFlags.contains("-m32")) {
+            extraLdFlags = " -L/usr/lib32";
+        } else if (archFlags.contains("-m64")) {
+            extraLdFlags = " -L/usr/lib64";
+        }
         
         final StringBuffer content = new StringBuffer();
         // TODO macosx cross compile
@@ -172,7 +178,7 @@ public class CompileMojo extends AbstractNarMojo {
         		"--host=" + hostOs + " " +
         		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options").replace("-Wall", "") + "' " +
         		"CXXFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".cpp.options").replace("-Wall", "") + "' " +
-        		"LDFLAGS='" + archFlags + "'\n");
+        		"LDFLAGS='" + archFlags + extraLdFlags + "'\n");
         content.append("make\n");
         content.append("make install\n");
         
