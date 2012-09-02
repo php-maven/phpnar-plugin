@@ -160,7 +160,7 @@ public class CompileMojo extends AbstractNarMojo {
 
         try {
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"");
-            buildOs = ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + buildScript.getAbsolutePath() + "\"").trim();
+            buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"").trim();
         }
         catch (CommandLineException ex) {
             throw new MojoFailureException("Failed to find the host os (config.guess)", ex);
