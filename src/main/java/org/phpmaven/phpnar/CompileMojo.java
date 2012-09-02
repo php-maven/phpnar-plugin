@@ -184,8 +184,8 @@ public class CompileMojo extends AbstractNarMojo {
         		"--prefix=\"" + installFolder.getAbsolutePath() + "\" " +
         		"--build=" + buildOs + " " +
         		"--host=" + hostOs + " " +
-        		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options") + "' " +
-        		"CXXFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".cpp.options") + "' " +
+        		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options").replace("-Wall", "") + "' " +
+        		"CXXFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".cpp.options").replace("-Wall", "") + "' " +
         		"LDFLAGS='" + archFlags + "' " +
         		this.createConfigureArgs(item, "--enable-cli --enable-embed=SHARED") + "\n");
         content.append("make\n");
