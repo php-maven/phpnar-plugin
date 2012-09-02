@@ -172,12 +172,12 @@ public class CompileMojo extends AbstractNarMojo {
         
         final String propertyKey = item.getAol().getKey();
         final NarProperties props = NarProperties.getInstance(this.project);
-        final String hostOs = props.getProperty(propertyKey + ".ArchFlags");
-        final String archFlags = props.getProperty(propertyKey + ".HostOs");
+        final String hostOs = props.getProperty(propertyKey + ".HostOs");
+        final String archFlags = props.getProperty(propertyKey + ".ArchFlags");
         
         final StringBuffer content = new StringBuffer();
         // TODO macosx cross compile
-        content.append("configure " +
+        content.append("./configure " +
         		"--prefix=\"" + installFolder.getAbsolutePath() + "\" " +
         		"--build=" + buildOs + " " +
         		"--host=" + hostOs + " " +
