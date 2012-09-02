@@ -160,7 +160,11 @@ public class CompileMojo extends AbstractNarMojo {
 
         try {
             ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/config-stubs").getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/buildcheck.sh").getAbsolutePath() + "\"");
             buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"").trim();
+            ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"").trim();
         }
         catch (CommandLineException ex) {
             throw new MojoFailureException("Failed to find the host os (config.guess)", ex);
@@ -172,7 +176,7 @@ public class CompileMojo extends AbstractNarMojo {
         final String archFlags = props.getProperty(propertyKey + ".HostOs");
         
         final StringBuffer content = new StringBuffer();
-        // TODO Autodetect cross compilation
+        // TODO macosx cross compile
         content.append("configure " +
         		"--prefix=\"" + installFolder.getAbsolutePath() + "\" " +
         		"--build=" + buildOs + " " +
