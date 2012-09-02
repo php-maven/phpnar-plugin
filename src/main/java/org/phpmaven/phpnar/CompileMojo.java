@@ -65,8 +65,7 @@ public class CompileMojo extends AbstractNarMojo {
                 
                 final File buildScript = this.generateWindowsBuildScript(item, targetFolder, buildTargetDir);
                 try {
-                    final String result = executeCommand(this.getLog(), "cmd /E:ON /V:ON /c \"" + buildScript.getAbsolutePath() + "\"", targetFolder);
-                    // TODO parse result and watch for errors
+                    executeCommand(this.getLog(), "cmd /E:ON /V:ON /c \"" + buildScript.getAbsolutePath() + "\"", targetFolder);
                 } catch (CommandLineException ex) {
                     throw new MojoFailureException("Error during compile", ex);
                 }
@@ -76,8 +75,7 @@ public class CompileMojo extends AbstractNarMojo {
                 final File buildScript = this.generateIxBuildScript(item, targetFolder);
                 
                 try {
-                    final String result = executeCommand(this.getLog(), "bash \"" + buildScript.getAbsolutePath() + "\"", targetFolder);
-                    // TODO parse result and watch for errors
+                    executeCommand(this.getLog(), "bash \"" + buildScript.getAbsolutePath() + "\"", targetFolder);
                 } catch (CommandLineException ex) {
                     throw new MojoFailureException("Error during compile", ex);
                 }
@@ -90,10 +88,9 @@ public class CompileMojo extends AbstractNarMojo {
      * @param log the logger
      * @param command command line
      * @param workDir working directory
-     * @return result string.
      * @throws CommandLineException throw on execution errors.
      */
-    private static String executeCommand(final Log log, final String command, final File workDir) throws CommandLineException {
+    private static void executeCommand(final Log log, final String command, final File workDir) throws CommandLineException {
         final Commandline cli = new Commandline(command);
         if (log != null) {
             log.debug("Executing " + command);
@@ -105,22 +102,15 @@ public class CompileMojo extends AbstractNarMojo {
             }
             cli.setWorkingDirectory(workDir);
         }
-        
-        final StringBuilder stdout = new StringBuilder();
-        final StringBuilder stderr = new StringBuilder();
         final StreamConsumer systemOut = new StreamConsumer() {
                 @Override
                 public void consumeLine(String line) {
-                    stdout.append(line);
-                    stdout.append("\n");
                     log.info(line);
                 }
             };
         final StreamConsumer systemErr = new StreamConsumer() {
                 @Override
                 public void consumeLine(String line) {
-                    stderr.append(line);
-                    stderr.append("\n");
                     log.warn(line);
                 }
             };
@@ -131,21 +121,16 @@ public class CompileMojo extends AbstractNarMojo {
                 systemErr);
             if (result != 0) {
                 if (log != null) {
-                    log.warn("Error invoking command. Return code " + result +
-                        "\n\nstd-out:\n" + stdout + "\n\nstd-err:\n" + stderr);
+                    log.warn("Error invoking command. Return code " + result);
                 }
                 throw new CommandLineException("Error invoking command. Return code " + result);
             }
         } catch (CommandLineException ex) {
             if (log != null) {
-                log.warn("Error invoking command\n\nstd-out:\n" + stdout + "\n\nstd-err:\n" + stderr);
+                log.warn("Error invoking command");
             }
             throw ex;
         }
-        if (log != null) {
-            log.debug("stdout: " + stdout.toString());
-        }
-        return stdout.toString();
     }
 
     private File generateIxBuildScript(AolItem item, File targetFolder) throws MojoFailureException {
