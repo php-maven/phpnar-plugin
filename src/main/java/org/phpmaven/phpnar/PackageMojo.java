@@ -24,7 +24,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.lf5.util.StreamUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProjectHelper;
@@ -157,7 +156,7 @@ public class PackageMojo extends AbstractNarMojo {
                     
                     final ZipOutputStream executableTarget = new ZipOutputStream(new FileOutputStream(executableNarFile));
                     zip(executableTarget, new File(buildRootFolder, "bin/php"), "/bin/php");
-                    zip(executableTarget, new File(buildRootFolder, "bin/php-cgi"), "bin/php-cgi");
+                    zip(executableTarget, new File(buildRootFolder, "bin/php-cgi"), "/bin/php-cgi");
                     zip(executableTarget, new File(buildRootFolder, "modules"), "/modules");
                     executableTarget.flush();
                     executableTarget.close();

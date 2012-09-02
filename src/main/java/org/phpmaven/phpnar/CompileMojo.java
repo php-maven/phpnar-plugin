@@ -167,12 +167,12 @@ public class CompileMojo extends AbstractNarMojo {
         // TODO macosx cross compile
         content.append("./configure " +
         		"--prefix=\"" + installFolder.getAbsolutePath() + "\" " +
+                this.createConfigureArgs(item, "--enable-cli --enable-embed=SHARED") + " " +
         		"--build=" + buildOs + " " +
         		"--host=" + hostOs + " " +
         		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options").replace("-Wall", "") + "' " +
         		"CXXFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".cpp.options").replace("-Wall", "") + "' " +
-        		"LDFLAGS='" + archFlags + "' " +
-        		this.createConfigureArgs(item, "--enable-cli --enable-embed=SHARED") + "\n");
+        		"LDFLAGS='" + archFlags + "'\n");
         content.append("make\n");
         content.append("make install\n");
         
