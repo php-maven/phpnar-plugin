@@ -159,9 +159,9 @@ public class CompileMojo extends AbstractNarMojo {
         String buildOs = null;
 
         try {
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"");
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\"");
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + new File(targetFolder, "build/*").getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x " + new File(targetFolder, "config.guess").getAbsolutePath().replace("\\", "\\\\").replace(" ", "\\ "));
+            ExecutionUtils.executeCommand(getLog(), "chmod +x " + new File(targetFolder, "buildconf").getAbsolutePath().replace("\\", "\\\\").replace(" ", "\\ "));
+            ExecutionUtils.executeCommand(getLog(), "chmod +x " + new File(targetFolder, "build/*").getAbsolutePath().replace("\\", "\\\\").replace(" ", "\\ "));
             buildOs = ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "config.guess").getAbsolutePath() + "\"", targetFolder).trim();
             ExecutionUtils.executeCommand(getLog(), "\"" + new File(targetFolder, "buildconf").getAbsolutePath() + "\" --force", targetFolder);
         }
@@ -197,7 +197,7 @@ public class CompileMojo extends AbstractNarMojo {
         }
         
         try {
-            ExecutionUtils.executeCommand(getLog(), "chmod +x \"" + buildScript.getAbsolutePath() + "\"");
+            ExecutionUtils.executeCommand(getLog(), "chmod +x " + buildScript.getAbsolutePath().replace("\\", "\\\\").replace(" ", "\\ "));
         } catch (CommandLineException ex) {
             throw new MojoFailureException("Error while chmod build script", ex);
         }
