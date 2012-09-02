@@ -182,7 +182,7 @@ public class CompileMojo extends AbstractNarMojo {
         		"--build=" + buildOs + " " +
         		"--host=" + hostOs + " " +
         		"CFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".c.options") + "' " +
-        		"CXXFLAGS='" + archFlags + "' " + props.getProperty(propertyKey + ".cpp.options") + "" +
+        		"CXXFLAGS='" + archFlags + " " + props.getProperty(propertyKey + ".cpp.options") + "' " +
         		"LDFLAGS='" + archFlags + "' " +
         		this.createConfigureArgs(item, "--enable-cli --enable-embed=SHARED") + "\n");
         content.append("make\n");
