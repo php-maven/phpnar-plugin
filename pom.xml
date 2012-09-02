@@ -39,6 +39,7 @@
     <scm>
     	<connection>scm:git:https://github.com/php-maven/phpnar-plugin.git</connection>
     	<url>http://github.com/php-maven/phpnar-plugin</url>
+    	<developerConnection>scm:git:git@github.com:php-maven/phpnar-plugin.git</developerConnection>
     </scm>
     
     <dependencies>
